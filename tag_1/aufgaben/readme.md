@@ -36,3 +36,35 @@ Tipp für Status Codes:
 ```python
 return {"error": "not found"}, 404
 ```
+
+---
+
+## Aufgabe 5: Der Horoskop-Generator 🔮 (Große Aufgabe)
+Baue eine API, die basierend auf einem Geburtsdatum die Zukunft vorhersagt!
+
+**Endpunkt:** `/api/horoskop/<datum>`
+
+**Anforderungen:**
+1. Der Endpunkt nimmt ein Datum entgegen (z.B. `12.06.1990`).
+2. Er generiert drei zufällige Werte zwischen **1 und 100** für:
+   - `glueck`
+   - `karma`
+   - `energie`
+3. Er wählt eine zufällige witzige Nachricht aus einer Liste von mindestens 5 Horoskop-Messages aus.
+4. Die Antwort soll ein **JSON-Objekt** sein.
+
+**Beispiel-Response:**
+```json
+{
+  "datum": "12.06.1990",
+  "glueck": 87,
+  "karma": 12,
+  "energie": 99,
+  "botschaft": "Heute ist ein guter Tag, um eine neue Programmiersprache zu lernen. Meide jedoch Kaffeeautomaten."
+}
+```
+
+**Tipps:**
+- Importiere das `random` Modul.
+- Nutze `random.randint(1, 100)` für die Werte.
+- Nutze `random.choice(meine_liste)` für die Botschaft.
