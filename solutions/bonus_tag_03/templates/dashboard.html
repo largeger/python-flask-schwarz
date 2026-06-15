@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="header">
+        <h1>WealthWise 📈</h1>
+        <p>Ihr Portfolio-Wert: <span class="total">{{ total }} €</span></p>
+    </div>
+
+    <div class="charts-row">
+        <div id="pie-chart" class="chart-container"></div>
+        <div id="bar-chart" class="chart-container"></div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Asset</th>
+                    <th>Symbol</th>
+                    <th>Kategorie</th>
+                    <th>Menge</th>
+                    <th>Preis</th>
+                    <th>Gesamtwert</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in portfolio %}
+                <tr>
+                    <td><strong>{{ item.name }}</strong></td>
+                    <td><code>{{ item.symbol }}</code></td>
+                    <td><span class="badge" style="background-color: {{ item.color }}">{{ item.category }}</span></td>
+                    <td>{{ item.amount }}</td>
+                    <td>{{ item.price }} €</td>
+                    <td><strong>{{ item.value }} €</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        var pieData = {{ pie_json | safe }};
+        var barData = {{ bar_json | safe }};
+        Plotly.newPlot('pie-chart', pieData.data, pieData.layout);
+        Plotly.newPlot('bar-chart', barData.data, barData.layout);
+    </script>
+{% endblock %}
