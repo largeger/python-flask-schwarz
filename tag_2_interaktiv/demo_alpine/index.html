@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine.js umfassende Demo</title>
+    <!-- Alpine.js über CDN einbinden (Kein Build-Schritt nötig) -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.15.0/cdn.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; color: #333; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .box { padding: 15px; background: #e3fafc; border: 1px solid #99e9f2; border-radius: 4px; margin-top: 10px; }
+        .dark-mode { background: #1a1b1e; color: #c1c2c5; }
+        .dark-mode .card { background: #25262b; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .badge { background: #228be6; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+        button { padding: 8px 12px; background: #228be6; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:disabled { background: #ced4da; cursor: not-allowed; }
+        input[type="text"] { padding: 8px; border: 1px solid #ced4da; border-radius: 4px; }
+    </style>
+</head>
+<!-- x-data initialisiert den globalen Zustand für den Body (z.B. Dark Mode) -->
+<!-- x-bind:class -->
+<body x-data="{ darkMode: false }" :class="{ 'dark-mode': darkMode }">
+
+<h1>Alpine.js Feature-Showcase</h1>
+
+<!-- 1. ZUSTAND & DOMLOGIK (x-data, x-model, x-text, x-bind) -->
+<div class="card" x-data="{ username: '', acceptTerms: false }">
+    <h2>1. Datenbindung & Attribute</h2>
+
+    <!-- x-model synchronisiert den Input-Wert live mit der Variable 'username' -->
+    <label>
+        <input type="text" x-model="username" placeholder="Dein Name...">
+    </label>
+
+    <!-- x-text gibt den Inhalt der Variable als Text aus -->
+    <p>Hallo, <span x-text="username ? username : 'Gast'"></span>!</p>
+
+    <!-- Two-Way-Binding mit einer Checkbox -->
+    <label>
+        <input type="checkbox" x-model="acceptTerms"> AGB akzeptieren
+    </label>
+
+    <div style="margin-top: 15px;">
+        <!-- x-bind (kurz :) setzt HTML-Attribute dynamisch. Hier: disabled, wenn Checkbox falsch ist -->
+        <!-- x-on:click (kurz: @click) registriert einen EventListener -->
+        <button :disabled="!acceptTerms" @click="alert('Registriert als ' + username)">
+            Registrieren
+        </button>
+    </div>
+</div>
+
+<!-- 2. SICHTBARKEIT & INITIALISIERUNG (x-show, x-if, x-init, x-on/@) -->
+<!-- x-init führt Code beim Laden aus. Hier simulieren wir einen API-Abruf nach 1 Sekunde -->
+<div class="card" x-data="{ open: false, loading: true, statusText: 'Lade Daten...' }"
+     x-init="setTimeout(() => { loading = false; statusText = 'Bereit!'; }, 1500)">
+
+    <h2>2. Sichtbarkeit & Lebenszyklus</h2>
+    <p>Status: <b x-text="statusText"></b></p>
+
+    <!-- x-on (kurz @) fängt Events ab. Hier schalten wir das Modal um -->
+    <button @click="open = !open" :disabled="loading">
+        Info-Box <span x-text="open ? 'schließen' : 'öffnen'"></span>
+    </button>
+
+    <!-- x-show blendet das Element per CSS (display: none) ein/aus. Perfekt für häufige Wechsel -->
+    <div class="box" x-show="open" @click.away="open = false" x-transition>
+        <p><strong>x-show:</strong> Ich bin eine Info-Box!</p>
+        <p><small>(Klicke irgendwo außerhalb, um mich dank @click.away zu schließen)</small></p>
+    </div>
+
+    <!-- x-if entfernt/erstellt das Element echt im DOM. Benötigt zwingend ein <template> Tag -->
+    <template x-if="!loading && open">
+        <div style="color: #40c057; margin-top: 10px;">
+            <strong>x-if:</strong> Diese Nachricht existiert nur im DOM, wenn das Modal offen ist.
+        </div>
+    </template>
+</div>
+
+<!-- 3. SCHLEIFEN & EVENTS (x-for, Event-Modifikatoren, $refs) -->
+<div class="card" x-data="{
+        newItem: '',
+        todos: ['Alpine lernen', 'Code testen']
+    }">
+    <h2>3. Schleifen (Schaufenster) & Referenzen</h2>
+
+    <!-- @submit.prevent verhindert das Neuladen der Seite beim Abschicken des Formulars -->
+    <form @submit.prevent="if(newItem.trim()) { todos.push(newItem); newItem = ''; $refs.todoInput.focus(); }">
+        <!-- $refs erlaubt den direkten Zugriff auf dieses DOM-Element im JavaScript -->
+        <input type="text" x-ref="todoInput" x-model="newItem" placeholder="Neues Todo...">
+        <button type="submit">Hinzufügen</button>
+    </form>
+
+    <ul>
+        <!-- x-for wiederholt Elemente. Benötigt ebenfalls ein <template> mit genau einem Kindelement -->
+        <template x-for="(todo, index) in todos" :key="index">
+            <li style="margin: 8px 0;">
+                <span x-text="todo"></span>
+                <!-- Entfernen-Button nutzt den Index des Arrays -->
+                <button style="padding: 2px 6px; background: #fa5252; font-size: 0.8rem;"
+                        @click="todos.splice(index, 1)">X</button>
+            </li>
+        </template>
+    </ul>
+</div>
+
+<!-- 4. GLOBALER ZUGRIFF & MAGISCHE METHODEN -->
+<div class="card">
+    <h2>4. Globale Steuerung & Magie</h2>
+    <!-- Greift auf das 'darkMode' Attribut zu, das ganz oben im body-Tag definiert wurde -->
+    <p>Der Dark-Mode ist aktuell: <span class="badge" x-text="darkMode ? 'AN' : 'AUS'"></span></p>
+    <button @click="darkMode = !darkMode" style="background: #495057;">
+        Theme wechseln
+    </button>
+</div>
+
+</body>
+</html>

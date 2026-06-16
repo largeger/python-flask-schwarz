@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Alpine.js Task List 🍦</h1>
+    <p>Diese Liste wird von Jinja2 geladen, aber von Alpine.js gesteuert.</p>
+
+    <!-- Initialisierung mit EINFACHEN Anführungszeichen außen -->
+    <div x-data='{ 
+        tasks: {{ tasks | tojson }}, 
+        newTask: "",
+        addTask() {
+            if (this.newTask.trim() === "") return;
+            this.tasks.push({ id: Date.now(), text: this.newTask, done: false });
+            this.newTask = "";
+        }
+    }'>
+        
+        <!-- Eingabefeld mit x-model -->
+        <div style="margin-bottom: 20px;">
+            <input type="text" x-model="newTask" @keydown.enter="addTask()" placeholder="Neue Aufgabe...">
+            <button class="btn" @click="addTask()">Hinzufügen</button>
+        </div>
+
+        <!-- Aufgabenliste mit x-for -->
+        <template x-for="task in tasks" :key="task.id">
+            <div class="task">
+                <span :class="{ 'done': task.done }" x-text="task.text"></span>
+                <button class="btn" style="background: #27ae60;" @click="task.done = !task.done" x-text="task.done ? 'Rückgängig' : 'Erledigen'"></button>
+            </div>
+        </template>
+
+        <!-- Status-Anzeige -->
+        <p style="margin-top: 20px; font-style: italic;">
+            Offene Aufgaben: <span x-text="tasks.filter(t => !t.done).length"></span>
+        </p>
+    </div>
+{% endblock %}
