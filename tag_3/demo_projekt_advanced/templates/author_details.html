@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Bücher von {{ author.name }}</h1>
+    <a href="{{ url_for('index') }}">&larr; Zurück zur Übersicht</a>
+
+    <div class="book-list">
+        {% for book in author.books %}
+            <div class="book-card">
+                <h3>{{ book.title }}</h3>
+                <p>Von: {{ author.name }}</p>
+            </div>
+        {% else %}
+            <p>Dieser Autor hat noch keine Bücher in der Liste.</p>
+        {% endfor %}
+    </div>
+
+    <div class="help-box" style="margin-top: 40px;">
+        <strong>Tipp:</strong> Neues Buch hinzufügen via URL:<br>
+        <code>/add_book/{{ author.id }}/Titel des Buches</code>
+    </div>
+{% endblock %}

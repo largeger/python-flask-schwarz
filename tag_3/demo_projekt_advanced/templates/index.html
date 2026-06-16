@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Autoren-Übersicht</h1>
+    <p>Diese Liste zeigt alle Autoren in der Datenbank und die Anzahl ihrer Bücher.</p>
+
+    <div class="list-group">
+        {% for author in authors %}
+            <div class="list-item">
+                <div>
+                    <strong>{{ author.name }}</strong>
+                    <br>
+                    <small>{{ author.books|length }} Bücher in der Sammlung</small>
+                </div>
+                <div>
+                    <a href="{{ url_for('author_details', author_id=author.id) }}" class="btn">Details & Bücher</a>
+                    <a href="{{ url_for('delete_author', id=author.id) }}" class="btn btn-danger">Löschen</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="help-box">
+        <strong>Tipp:</strong> Neuen Autor hinzufügen via URL:<br>
+        <code>/add_author/Name Des Autors</code>
+    </div>
+{% endblock %}
