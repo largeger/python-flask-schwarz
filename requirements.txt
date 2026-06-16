@@ -1,0 +1,17 @@
+# Python Flask Bootcamp - Notwendige Module
+
+# Web Framework & Extensions
+flask>=3.0.0
+flask-sqlalchemy>=3.1.0
+
+# Datenanalyse & Visualisierung (für Bonus-Challenges)
+pandas
+numpy
+matplotlib
+yfinance
+plotly
+
+# Deployment & Utility
+python-dotenv
+gunicorn
+werkzeug
