@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}Startseite{% endblock %}
+
+{% block content %}
+    <h1>Willkommen, {{ name }}! 👋</h1>
+    <p>Dies ist eine Demo-Applikation für Tag 2 des Flask-Bootcamps.</p>
+    <p>Heute lernst du:</p>
+    <ul>
+        <li>Wie man Jinja2-Vorlagen nutzt.</li>
+        <li>Wie Template-Vererbung (Layouts) funktioniert.</li>
+        <li>Wie man CSS-Dateien statisch einbindet.</li>
+    </ul>
+    <a href="{{ url_for('portfolio') }}" style="display: inline-block; background: #2c3e50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">Zum Portfolio gehen</a>
+{% endblock %}

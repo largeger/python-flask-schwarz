@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}Mein Portfolio{% endblock %}
+
+{% block content %}
+    <h1>Meine Projekte 📂</h1>
+    <div class="project-grid">
+        {% for project in projects %}
+            <div class="card">
+                <h3>{{ project.title }} <span class="badge">{{ project.category }}</span></h3>
+                <p>{{ project.desc }}</p>
+                <small>Erstellt: {{ project.year }}</small>
+                {% if project.year == 2024 %}
+                    <span style="color: #e74c3c; font-weight: bold; margin-left: 10px;">NEU!</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
