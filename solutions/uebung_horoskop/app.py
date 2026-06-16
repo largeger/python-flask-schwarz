@@ -63,11 +63,16 @@ def archiv():
 
 @app.route("/api/horoskop/<datum>")
 def get_horoskop(datum):
+    # Deterministischer Zufall pro Geburtsdatum und Kalendertag
+    today_str = datetime.utcnow().strftime("%Y-%m-%d")
+    seed_str = f"{datum}-{today_str}"
+    gen = random.Random(seed_str)
+    
     # 1. Werte generieren
-    glueck = random.randint(1, 100)
-    karma = random.randint(1, 100)
-    energie = random.randint(1, 100)
-    message = random.choice(MESSAGES)
+    glueck = gen.randint(1, 100)
+    karma = gen.randint(1, 100)
+    energie = gen.randint(1, 100)
+    message = gen.choice(MESSAGES)
     
     # 2. In Datenbank speichern (Tag 3 Aufgabe)
     new_log = HoroscopeLog(
