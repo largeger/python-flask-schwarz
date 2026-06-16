@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Horoskop-Archiv 📚</h1>
+    <p>Hier siehst du alle bisherigen Vorhersagen.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Glück</th>
+                <th>Karma</th>
+                <th>Energie</th>
+                <th>Botschaft</th>
+                <th>Erstellt am</th>
+                <th>Aktion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.requested_date }}</td>
+                <td>{{ log.glueck }}%</td>
+                <td>{{ log.karma }}%</td>
+                <td>{{ log.energie }}%</td>
+                <td style="max-width: 300px;"><small>{{ log.message }}</small></td>
+                <td>{{ log.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                <td>
+                    <a href="{{ url_for('delete_log', id=log.id) }}" class="btn-delete">Löschen</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" style="text-align: center;">Noch keine Einträge im Archiv.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 30px;">
+        <a href="{{ url_for('index') }}">&larr; Zurück zur Vorhersage</a>
+    </div>
+{% endblock %}

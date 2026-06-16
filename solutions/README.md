@@ -16,6 +16,10 @@ In diesem Verzeichnis findest du die Referenz-Implementierungen für die Bonus-A
 - **Tech-Stack:** Flask, SQLAlchemy, Plotly, yfinance.
 - **Highlights:** Datenbank-Beziehungen (1:n), Echtzeit-API-Integration, interaktive Web-Charts (JSON-Encoder).
 
+### [Übung: Horoskop Pro (Gesamtlösung)](./uebung_horoskop)
+- **Tech-Stack:** Flask, SQLAlchemy, Alpine.js, Vanilla CSS.
+- **Highlights:** Fullstack-Workflow über 3 Tage. API-Entwicklung (Tag 1), Interaktives UI mit Fetch (Tag 2) und Datenbank-Archivierung (Tag 3).
+
 ---
 
 ## 🚀 Starten einer Lösung
