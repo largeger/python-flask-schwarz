@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="hero">
+        <h1>Willkommen zum Tag 4 Demo! 📝</h1>
+        <p>Heute dreht sich alles um die Interaktion mit dem Benutzer und eine saubere Code-Struktur.</p>
+    </div>
+
+    <div class="card">
+        <h3>Was du in diesem Demo siehst:</h3>
+        <ul>
+            <li><strong>Blueprints:</strong> Der Code ist in <code>main.py</code> und <code>blog.py</code> unterteilt.</li>
+            <li><strong>POST-Requests:</strong> Daten werden sicher über Formulare an den Server gesendet.</li>
+            <li><strong>Flash-Messages:</strong> Dynamisches Feedback nach dem Absenden eines Formulars.</li>
+            <li><strong>Redirects:</strong> Automatisches Weiterleiten nach erfolgreichen Aktionen.</li>
+        </ul>
+        <a href="{{ url_for('blog.create_post') }}" class="btn">Gleich mal ausprobieren</a>
+    </div>
+{% endblock %}

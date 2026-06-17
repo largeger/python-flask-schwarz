@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Neuen Beitrag erstellen ✍️</h1>
+    <div class="form-card">
+        <form method="POST">
+            <div class="form-group">
+                <label for="title">Titel</label>
+                <input type="text" id="title" name="title" placeholder="Wie soll dein Beitrag heißen?" required>
+            </div>
+            <div class="form-group">
+                <label for="content">Inhalt</label>
+                <textarea id="content" name="content" rows="5" placeholder="Schreibe hier deinen Text..." required></textarea>
+            </div>
+            <button type="submit" class="btn">Beitrag veröffentlichen</button>
+        </form>
+    </div>
+{% endblock %}

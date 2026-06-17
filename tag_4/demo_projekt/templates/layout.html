@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Demo - Tag 4</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="{{ url_for('main.index') }}" class="brand">🚀 Tag 4 Demo</a>
+            <div class="links">
+                <a href="{{ url_for('main.index') }}">Home</a>
+                <a href="{{ url_for('blog.list_posts') }}">Blog</a>
+                <a href="{{ url_for('blog.create_post') }}">Neuer Post</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Flask Bootcamp - Tag 4: Formulare & Blueprints</p>
+    </footer>
+</body>
+</html>
