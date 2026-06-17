@@ -19,6 +19,14 @@ Für Teilnehmer, die schneller vorankommen oder ihr Wissen vertiefen wollen, gib
 - **Tag 1:** [E-Commerce Analytics Dashboard](./challenges/bonus-tag-01.md) (Pandas, NumPy, Matplotlib & Flask)
 - **Tag 2:** [Cinemania Movie-Explorer](./challenges/bonus-tag-02.md) (Interaktives Frontend mit Alpine.js)
 - **Tag 3:** [WealthWise Investment-Tracker](./challenges/bonus-tag-03.md) (Komplexe DB-Beziehungen & Finanz-APIs)
+- **Tag 4:** [SkillTest Quiz-System](./challenges/bonus-tag-04.md) (Blueprints, Sessions & Formular-Validierung)
+
+---
+
+## 📚 Nützliche Ressourcen
+Für ergänzendes Selbststudium werden folgende Tutorials empfohlen:
+- [GeeksforGeeks: Introduction to Web Development using Flask](https://www.geeksforgeeks.org/python/python-introduction-to-web-development-using-flask/)
+- [Offizielle Flask Dokumentation](https://flask.palletsprojects.com/en/stable/)
 
 ---
 
@@ -31,12 +39,3 @@ Für Teilnehmer, die schneller vorankommen oder ihr Wissen vertiefen wollen, gib
 Bevor du startest, installiere alle notwendigen Python-Module mit:
 ```bash
 pip install -r requirements.txt
-```
-
-## 📂 Struktur der Unterlagen
-Jeder Tag ist identisch aufgebaut, um dir die Orientierung zu erleichtern:
-- **theorie/**: Enthält ein kompaktes Cheat Sheet (Markdown) und ein ausführliches Jupyter Notebook für den Einstieg.
-- **aufgaben/**: Eine Sammlung von Übungen mit steigendem Schwierigkeitsgrad.
-- **demo_projekt/**: Ein lauffähiges Beispiel für den jeweiligen Tag.
-
-Viel Erfolg beim Programmieren! 🐍🔥
