@@ -20,6 +20,10 @@ In diesem Verzeichnis findest du die Referenz-Implementierungen für die Bonus-A
 - **Tech-Stack:** Flask, SQLAlchemy, Alpine.js, Vanilla CSS.
 - **Highlights:** Fullstack-Workflow über 3 Tage. API-Entwicklung (Tag 1), Interaktives UI mit Fetch (Tag 2) und Datenbank-Archivierung (Tag 3).
 
+### [Tag 4: SkillTest Quiz-System](./bonus_tag_04)
+- **Tech-Stack:** Flask, Blueprints, Sessions, Jinja2.
+- **Highlights:** Saubere Modularisierung, Spielstand-Management via Sessions, dynamische Formular-Validierung und UX-Feedback.
+
 ---
 
 ## 🚀 Starten einer Lösung
