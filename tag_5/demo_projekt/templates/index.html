@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Demo 🚀</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #f4f7f6; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .alert { padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+        .alert-success { background: #e8fdf0; color: #1e8e3e; }
+        .alert-danger { background: #fde8e8; color: #d93025; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .gallery img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; }
+        h1 { color: #2980b9; }
+        .btn { background: #2980b9; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Deployment & Upload Demo 🚀</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+        <h3>Neues Bild hochladen</h3>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <br><br>
+            <button type="submit" class="btn">Hochladen</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Galerie</h3>
+        <div class="gallery">
+            {% for img in images %}
+                <img src="{{ url_for('static', filename='uploads/' + img) }}" alt="Uploaded">
+            {% else %}
+                <p>Noch keine Bilder hochgeladen.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer style="text-align: center; color: #888;">
+        <p>Running in a Docker Container? Check your logs!</p>
+    </footer>
+</body>
+</html>

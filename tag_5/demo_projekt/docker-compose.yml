@@ -1,0 +1,12 @@
+services:
+  # --- WEB APP SERVICE (Flask) ---
+  web:
+    build: .
+    container_name: tag5_demo_app
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=dev-key-demo-123
+    volumes:
+      # Volume-Mapping für den Upload-Ordner, um Bilder lokal zu persistieren
+      - ./static/uploads:/code/static/uploads
