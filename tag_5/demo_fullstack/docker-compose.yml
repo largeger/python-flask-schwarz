@@ -1,0 +1,38 @@
+services:
+  # --- DATENBANK SERVICE (Postgres) ---
+  db:
+    image: postgres:15
+    container_name: travel_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: travel_journal
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d travel_journal"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- WEB APP SERVICE (Flask) ---
+  web:
+    build: .
+    container_name: travel_app
+    ports:
+      - "8000:8000"
+    environment:
+      # Connection-String für SQLAlchemy (Host ist der Service-Name 'db')
+      DATABASE_URL: postgresql://user:password@db:5432/travel_journal
+      SECRET_KEY: super-geheim-123
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      # Volume für Bilder-Persistenz
+      - ./static/uploads:/app/static/uploads
+
+volumes:
+  postgres_data:

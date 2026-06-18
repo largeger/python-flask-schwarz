@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="card-form">
+    <h2>Neues Ziel entdecken</h2>
+    <!-- multipart/form-data ist Pflicht für Datei-Uploads! (Tag 5) -->
+    <form action="{{ url_for('journal.add_entry') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <input type="text" name="title" placeholder="Titel der Reise" required>
+        </div>
+        <div class="form-group">
+            <input type="text" name="destination" placeholder="Zielort (z.B. Paris, Frankreich)" required>
+        </div>
+        <div class="form-group">
+            <textarea name="body" placeholder="Was hast du erlebt?" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Ein Foto hochladen:</label><br>
+            <input type="file" name="image" accept="image/*">
+        </div>
+        <button type="submit">Eintrag speichern</button>
+    </form>
+</div>
+
+<hr>
+
+<h2>Bisherige Erlebnisse</h2>
+<div class="travel-grid">
+    {% for entry in entries %}
+    <div class="travel-card">
+        {% if entry.image_file %}
+            <img src="{{ url_for('static', filename='uploads/' + entry.image_file) }}" alt="{{ entry.title }}">
+        {% else %}
+            <img src="https://via.placeholder.com/400x250?text=Kein+Bild" alt="Platzhalter">
+        {% endif %}
+        
+        <div class="travel-content">
+            <h3>{{ entry.title }}</h3>
+            <p class="destination">📍 {{ entry.destination }}</p>
+            <p>{{ entry.body }}</p>
+            <small>{{ entry.created_at.strftime('%d.%m.%Y') }}</small>
+            
+            <form action="{{ url_for('journal.delete_entry', id=entry.id) }}" method="POST" style="margin-top: 10px;">
+                <button type="submit" class="btn-danger" onclick="return confirm('Wirklich löschen?')">Löschen</button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <p>Noch keine Reisen erfasst. Fang gleich an!</p>
+    {% endfor %}
+</div>
+{% endblock %}

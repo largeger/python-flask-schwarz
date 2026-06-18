@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Log | Fullstack Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav>
+        <h1>🌍 Mein Reisetagebuch</h1>
+    </nav>
+
+    <div class="container">
+        <!-- Flash Messages Loop (Tag 4) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer style="text-align: center; margin-top: 30px; font-size: 0.8em; color: #888;">
+        Flask Bootcamp Tag 5 - Fullstack Demo (Postgres & Docker)
+    </footer>
+</body>
+</html>
