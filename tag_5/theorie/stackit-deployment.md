@@ -53,9 +53,12 @@ CMD ["python", "app.py"]
 
 ### 1. Secrets im Git-Repository hinterlegen
 Navigieren Sie in Ihrem STACKIT Git-Repository zu **Settings > Secrets** und fügen Sie folgende Variablen hinzu:
+![img.png](assets/git_secrets.png)
 * `REGISTRY_URL`: Die Adresse Ihrer STACKIT Registry (z. B. `registry.onstackit.cloud`).
 * `REGISTRY_USER`: Ihre STACKIT-E-Mail-Adresse.
-* `REGISTRY_PASSWORD`: Ihr persönliches **CLI-Secret**. (Zu finden im STACKIT Portal oben rechts unter *User Profile -> CLI Secret*).
+* `REGISTRY_PASSWORD`: Ihr persönliches **CLI-Secret**. (Zu finden im STACKIT Portal der Container Registry oben rechts unter *User Profile -> CLI Secret*).
+
+![User Profile](assets/user_profile_cli_pwd.png)
 
 ### 2. Workflow-Datei anlegen
 Erstellen Sie in Ihrem Repository die Ordnerstruktur `.forgejo/workflows/` und legen Sie darin die Datei `build-and-push.yaml` an:
@@ -71,7 +74,8 @@ on:
 jobs:
   build-and-push:
     # Wichtig: Nutzen Sie das für Ihre STACKIT-Umgebung gültige Runner-Label
-    runs-on: ubuntu-20.04  
+    runs-on: stackit-ubuntu-22  # Nutzt den STACKIT-Standard-Runner
+    # sonst üblicherweise: runs-on: ubuntu-20.04 
     steps:
       - name: Code auschecken
         uses: actions/checkout@v4
@@ -127,11 +131,14 @@ sudo apt-get install -y docker.io
 ### 3. An der STACKIT Registry anmelden
 Melden Sie sich mit Ihren Zugangsdaten an (Nutzen Sie Ihr **CLI-Secret** als Passwort. In PuTTY fügen Sie es mit einem einfachen **Rechtsklick** ein):
 ```bash
-sudo docker login registry.stackit.cloud
+sudo docker login registry.onstackit.cloud
 ```
 
 ### 4. Container im Hintergrund starten
-Laden Sie das Image herunter und starten Sie es. Die Port-Weiterleitung `-p 80:5000` sorgt dafür, dass Anfragen aus dem Internet (Port 80) an Flask (Port 5000) weitergeleitet werden:
+Laden Sie das Image herunter und starten Sie es. Die Port-Weiterleitung `-p 80:5000` sorgt dafür, dass Anfragen aus dem Internet (Port 80) an Flask (Port 5000) weitergeleitet werden.
+Die URI setzt sich zusammen aus der STACKIT Registry URL und dem dort gewählten Projektnamen: 
+
+![Registry Project Name](assets/cloud_registry_project_name.png)
 ```bash
 sudo docker run -d -p 80:5000 registry.onstackit.cloud/python-flask/flask-projekt/flask-app:latest
 ```
