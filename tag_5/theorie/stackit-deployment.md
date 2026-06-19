@@ -79,9 +79,9 @@ jobs:
       - name: Bei STACKIT Registry anmelden
         uses: docker/login-action@v3
         with:
-          registry: \${{ secrets.REGISTRY_URL }}
-          username: \${{ secrets.REGISTRY_USER }}
-          password: \${{ secrets.REGISTRY_PASSWORD }}
+          registry: ${{ secrets.REGISTRY_URL }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Docker Image bauen und pushen
         uses: docker/build-push-action@v5
@@ -90,8 +90,9 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            \${{ secrets.REGISTRY_URL }}/ihr-projekt/flask-app:latest
+            ${{ secrets.REGISTRY_URL }}/ihr-projekt/flask-app:latest
 ```
+`ihr-projekt` ist der Name des in der STACKIT Container Registry verwendeten Projekts.
 
 Sobald Sie diese Datei in den `main`-Branch pushen, baut die STACKIT Git Action Ihr Image automatisch und legt es in der Registry ab.
 
