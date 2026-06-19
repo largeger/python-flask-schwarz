@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div x-data='{ 
+    movies: {{ movies | tojson }}, 
+    search: "", 
+    genreFilter: "Alle", 
+    watchlist: [],
+    showModal: false,
+    selectedMovie: null,
+    
+    get filteredMovies() {
+        return this.movies.filter(m => {
+            const matchesSearch = m.title.toLowerCase().includes(this.search.toLowerCase());
+            const matchesGenre = this.genreFilter === "Alle" || m.genre === this.genreFilter;
+            return matchesSearch && matchesGenre;
+        });
+    },
+    
+    toggleWatchlist(id) {
+        if (this.watchlist.includes(id)) {
+            this.watchlist = this.watchlist.filter(i => i !== id);
+        } else {
+            this.watchlist.push(id);
+        }
+    },
+    
+    openModal(movie) {
+        this.selectedMovie = movie;
+        this.showModal = true;
+    }
+}' class="app-container">
+
+    <nav class="navbar">
+        <div class="brand">Cinemania 🍿</div>
+        <div class="nav-right">
+            <span>Watchlist: <span x-text="watchlist.length" class="badge"></span></span>
+        </div>
+    </nav>
+
+    <div class="controls">
+        <input type="text" x-model="search" placeholder="Suchen..." class="search-input">
+        
+        <div class="genre-buttons">
+            <button @click="genreFilter = 'Alle'" :class="{ 'active': genreFilter === 'Alle' }">Alle</button>
+            <template x-for="genre in [...new Set(movies.map(m => m.genre))]">
+                <button @click="genreFilter = genre" 
+                        :class="{ 'active': genreFilter === genre }" 
+                        x-text="genre"></button>
+            </template>
+        </div>
+    </div>
+
+    <div class="movie-grid">
+        <template x-for="movie in filteredMovies" :key="movie.id">
+            <div class="movie-card" x-transition>
+                <div class="poster" @click="openModal(movie)">
+                    <img :src="'https://picsum.photos/seed/' + movie.id + '/200/300'" alt="Poster">
+                    <div class="rating" x-text="movie.rating"></div>
+                </div>
+                <div class="info">
+                    <h3 x-text="movie.title"></h3>
+                    <p x-text="movie.genre + ' | ' + movie.year"></p>
+                    <button @click="toggleWatchlist(movie.id)" 
+                            :class="watchlist.includes(movie.id) ? 'btn-remove' : 'btn-add'"
+                            x-text="watchlist.includes(movie.id) ? 'Von Watchlist entfernen' : '+ Watchlist'">
+                    </button>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" x-show="showModal" x-cloak @click.self="showModal = false">
+        <div class="modal-content">
+            <template x-if="selectedMovie">
+                <div>
+                    <h2 x-text="selectedMovie.title"></h2>
+                    <p><strong>Jahr:</strong> <span x-text="selectedMovie.year"></span></p>
+                    <p><strong>Genre:</strong> <span x-text="selectedMovie.genre"></span></p>
+                    <p x-text="selectedMovie.desc" style="margin: 20px 0;"></p>
+                    <button @click="showModal = false" class="btn-close">Schließen</button>
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="card result-card">
+    <h1>Geschafft, {{ username }}! 🏆</h1>
+    <div class="score-display">
+        <span class="score">{{ score }} / {{ total }}</span>
+        <p>Das sind <strong>{{ percentage }}%</strong> richtig!</p>
+    </div>
+
+    {% if percentage == 100 %}
+        <p class="feedback">Perfekt! Du bist ein Flask-Meister! 👑</p>
+    {% elif percentage >= 50 %}
+        <p class="feedback">Gut gemacht! Du bist auf einem tollen Weg. 👍</p>
+    {% else %}
+        <p class="feedback">Nicht aufgeben! Übung macht den Meister. 💪</p>
+    {% endif %}
+
+    <a href="{{ url_for('quiz.start_quiz') }}" class="btn">Nochmal versuchen</a>
+    <a href="{{ url_for('auth.logout') }}" class="btn secondary">Beenden</a>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="progress-bar">
+        Frage {{ current }} von {{ total }}
+    </div>
+    <h2>{{ question.text }}</h2>
+    
+    <form method="POST">
+        <div class="options">
+            {% for option in question.options %}
+                <label class="option-label">
+                    <input type="radio" name="answer" value="{{ option }}" required>
+                    <span>{{ option }}</span>
+                </label>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn">Antworten</button>
+    </form>
+</div>
+{% endblock %}

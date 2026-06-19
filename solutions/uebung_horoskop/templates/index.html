@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Dein persönliches Horoskop 🔮</h1>
+    <p>Gib dein Geburtsdatum ein und lass dir von der KI (Kosmischen Intelligenz) deine Zukunft vorhersagen.</p>
+
+    <div x-data="{ 
+        datum: '', 
+        result: null, 
+        loading: false,
+        error: null,
+        fetchHoroskop() {
+            if (!this.datum) {
+                this.error = 'Bitte gib ein Datum ein!';
+                return;
+            }
+            this.loading = true;
+            this.error = null;
+            this.result = null;
+            
+            fetch('/api/horoskop/' + this.datum)
+                .then(res => res.json())
+                .then(data => {
+                    this.result = data;
+                    this.loading = false;
+                })
+                .catch(err => {
+                    this.error = 'Fehler beim Abrufen der Sterne.';
+                    this.loading = false;
+                });
+        }
+    }" class="horoskop-box">
+        
+        <div class="input-group">
+            <input type="date" x-model="datum" @keydown.enter="fetchHoroskop()">
+            <button @click="fetchHoroskop()" :disabled="loading">
+                <span x-show="!loading">Sterne befragen 🌌</span>
+                <span x-show="loading">Befrage Universum...</span>
+            </button>
+        </div>
+
+        <p x-show="error" x-text="error" class="error"></p>
+
+        <!-- Ergebnis-Anzeige -->
+        <div x-show="result" x-transition class="result-card">
+            <h2 x-text="'Vorhersage für ' + result.requested_date"></h2>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <label>Glück</label>
+                    <div class="bar-bg"><div class="bar" :style="'width: ' + result.glueck + '%; background: #2ecc71'"></div></div>
+                    <span x-text="result.glueck + '%'"></span>
+                </div>
+                <div class="stat-item">
+                    <label>Karma</label>
+                    <div class="bar-bg"><div class="bar" :style="'width: ' + result.karma + '%; background: #f1c40f'"></div></div>
+                    <span x-text="result.karma + '%'"></span>
+                </div>
+                <div class="stat-item">
+                    <label>Energie</label>
+                    <div class="bar-bg"><div class="bar" :style="'width: ' + result.energie + '%; background: #e74c3c'"></div></div>
+                    <span x-text="result.energie + '%'"></span>
+                </div>
+            </div>
+
+            <div class="message-bubble">
+                <p x-text="result.message"></p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

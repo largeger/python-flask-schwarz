@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>E-Commerce Analytics Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <h1>ShopifyPlus-Analyzer 📊</h1>
+    </div>
+
+    <div class="filters">
+        <form action="/" method="GET">
+            <label>Kategorie:</label>
+            <select name="category">
+                {% for cat in categories %}
+                    <option value="{{ cat }}" {% if cat == selected_cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Segment:</label>
+            <select name="segment">
+                {% for seg in segments %}
+                    <option value="{{ seg }}" {% if seg == selected_seg %}selected{% endif %}>{{ seg }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn">Filtern</button>
+        </form>
+    </div>
+
+    <div class="kpi-container">
+        <div class="kpi-card">
+            <h3>Gesamtumsatz</h3>
+            <p class="kpi-value">{{ kpis.umsatz }} €</p>
+        </div>
+        <div class="kpi-card">
+            <h3>Bestellungen</h3>
+            <p class="kpi-value">{{ kpis.bestellungen }}</p>
+        </div>
+        <div class="kpi-card">
+            <h3>Warenkorbwert</h3>
+            <p class="kpi-value">{{ kpis.aov }} €</p>
+        </div>
+        <div class="kpi-card">
+            <h3>Top Kategorie</h3>
+            <p class="kpi-value">{{ kpis.top_kat }}</p>
+        </div>
+    </div>
+
+    <div class="charts">
+        <div class="chart-box">
+            <h2>Umsatztrend</h2>
+            <img src="data:image/png;base64,{{ trend_plot }}" alt="Trend Plot">
+        </div>
+        <div class="chart-box">
+            <h2>Kategorieverteilung</h2>
+            <img src="data:image/png;base64,{{ dist_plot }}" alt="Distribution Plot">
+        </div>
+    </div>
+</body>
+</html>
