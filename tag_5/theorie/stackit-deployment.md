@@ -150,3 +150,102 @@ sudo docker run -d -p 80:5000 registry.onstackit.cloud/python-flask/flask-projek
 `http://IHRE_OEFFENTLICHE_VM_IP`
 
 Sie sollten nun die Meldung **"Hello, World!"** sehen. Ihre Anwendung ist erfolgreich im Web verfügbar.
+
+---
+
+## Phase 5: Vollautomatische Aktualisierung via Push-Trigger (mit verschlüsseltem SSH-Key)
+
+In dieser Phase fügen wir der STACKIT Git Action den finalen Schritt hinzu. Sobald Sie Code in den `main`-Branch pushen, verbindet sich der Runner automatisch per passwortgeschütztem SSH-Schlüssel mit Ihrer VM, beendet die alte Version und startet die neu gebaute Flask-Anwendung.
+
+---
+
+### 1. Secrets im Git-Repository ergänzen
+Navigieren Sie in Ihrem STACKIT Git-Repository zu **Settings > Secrets** und fügen Sie die folgenden vier Variablen für den Server-Zugriff hinzu:
+
+* `SSH_HOST`: Die öffentliche IP-Adresse Ihrer STACKIT VM.
+* `SSH_USER`: Der Benutzername Ihrer VM (Standard bei STACKIT Ubuntu-VMs: `ubuntu`).
+* `SSH_PRIVATE_KEY`: Der **vollständige Inhalt** Ihrer ursprünglichen `.pem`-Datei (inklusive der Zeilen `-----BEGIN OPENSSH PRIVATE KEY-----` und `-----END OPENSSH PRIVATE KEY-----`).
+* `SSH_PASSPHRASE`: Das Passwort (die Passphrase), mit dem Ihr privater SSH-Schlüssel verschlüsselt ist.
+
+![additional_secrets.png](assets/additional_secrets.png)
+
+---
+
+### 2. Die finale Workflow-Datei anpassen
+Ersetzen Sie den Inhalt Ihrer Datei `.forgejo/workflows/build-and-push.yaml` durch den folgenden vollständigen Code. Der Deployment-Schritt nutzt die hinterlegten Secrets und führt die Befehle direkt auf Ihrer VM aus.
+Außerdem enthält sie ein paar kleinere Optimierungen (z.B. das Speichern des Pfades zum Container Registry Image in einer Variablen)
+
+```yaml
+name: Build and Push Flask App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    # Wichtig: Nutzen Sie das für Ihre STACKIT-Umgebung gültige Runner-Label
+    runs-on: stackit-ubuntu-22  # Nutzt den STACKIT-Standard-Runner
+
+    # Zentrale Definition des Image-Pfads für das gesamte Skript
+    env:
+      IMAGE_PATH: ${{ secrets.REGISTRY_URL }}/python-hello/flask-app:latest
+
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Bei STACKIT Registry anmelden
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.REGISTRY_URL }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Docker Image bauen und pushen
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_PATH }}
+
+      - name: Deployment auf VM ausführen
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          envs: IMAGE_PATH
+          script: |
+            # 1. Bei STACKIT Registry einloggen
+            echo "${{ secrets.REGISTRY_PASSWORD }}" | sudo docker login ${{ secrets.REGISTRY_URL }} --username "${{ secrets.REGISTRY_USER }}" --password-stdin
+            
+            # 2. Laufenden Container stoppen und entfernen (falls vorhanden)
+            sudo docker stop flask-app-container || true
+            sudo docker rm flask-app-container || true
+            
+            # 3. Altes Image löschen, um Speicherplatz zu sparen
+            sudo docker rmi $IMAGE_PATH || true 
+            
+            # 4. Neues Image aus der STACKIT Registry ziehen
+            sudo docker pull $IMAGE_PATH
+            
+            # 5. Container mit festem Namen und Auto-Restart starten
+            sudo docker run -d \
+              --name flask-app-container \
+              --restart always \
+              -p 80:5000 \
+              $IMAGE_PATH 
+```
+
+---
+
+### 🎉 Live-Test nach dem Push
+Nehmen Sie eine kleine Änderung in Ihrer `app.py` vor (z. B. den Text zu *"Hello, STACKIT World!"* ändern) und pushen Sie die Änderung in Ihr Repository. 
+
+Verfolgen Sie den Fortschritt unter **Actions** in Ihrem Git-Repository. Sobald die Pipeline grün leuchtet, aktualisiert sich Ihre App unter `http://IHRE_OEFFENTLICHE_VM_IP` ohne manuelles Zutun.
+
+![workflow_run.png](assets/workflow_run.png)
